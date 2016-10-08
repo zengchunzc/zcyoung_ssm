@@ -10,16 +10,14 @@
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="email_yz" property="emailYz" jdbcType="INTEGER" />
     <result column="pic" property="pic" jdbcType="VARCHAR" />
+    <result column="friend_list" property="friendList" jdbcType="VARCHAR" />
+    <result column="friend_list_tmp" property="friendListTmp" jdbcType="VARCHAR" />
     <result column="role" property="role" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="r_time" property="rTime" jdbcType="TIMESTAMP" />
     <result column="r_ip" property="rIp" jdbcType="VARCHAR" />
     <result column="pre_time" property="preTime" jdbcType="TIMESTAMP" />
     <result column="pre_ip" property="preIp" jdbcType="VARCHAR" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="cn.zcyoung.home.pojo.UserWithBLOBs" extends="BaseResultMap" >
-    <result column="friend_list" property="friendList" jdbcType="LONGVARCHAR" />
-    <result column="friend_list_tmp" property="friendListTmp" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -80,28 +78,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, username, password, nickname, signature, email, email_yz, pic, role, state, r_time, 
-    r_ip, pre_time, pre_ip
+    id, username, password, nickname, signature, email, email_yz, pic, friend_list, friend_list_tmp, 
+    role, state, r_time, r_ip, pre_time, pre_ip
   </sql>
-  <sql id="Blob_Column_List" >
-    friend_list, friend_list_tmp
-  </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="cn.zcyoung.home.pojo.UserExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from user
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.zcyoung.home.pojo.UserExample" >
     select
     <if test="distinct" >
@@ -119,11 +98,9 @@
       limit #{page.begin} , #{page.length}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from user
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -137,21 +114,21 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.zcyoung.home.pojo.UserWithBLOBs" >
+  <insert id="insert" parameterType="cn.zcyoung.home.pojo.User" >
     insert into user (id, username, password, 
       nickname, signature, email, 
-      email_yz, pic, role, 
-      state, r_time, r_ip, 
-      pre_time, pre_ip, friend_list, 
-      friend_list_tmp)
+      email_yz, pic, friend_list, 
+      friend_list_tmp, role, state, 
+      r_time, r_ip, pre_time, 
+      pre_ip)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{signature,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{emailYz,jdbcType=INTEGER}, #{pic,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{rTime,jdbcType=TIMESTAMP}, #{rIp,jdbcType=VARCHAR}, 
-      #{preTime,jdbcType=TIMESTAMP}, #{preIp,jdbcType=VARCHAR}, #{friendList,jdbcType=LONGVARCHAR}, 
-      #{friendListTmp,jdbcType=LONGVARCHAR})
+      #{emailYz,jdbcType=INTEGER}, #{pic,jdbcType=VARCHAR}, #{friendList,jdbcType=VARCHAR}, 
+      #{friendListTmp,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
+      #{rTime,jdbcType=TIMESTAMP}, #{rIp,jdbcType=VARCHAR}, #{preTime,jdbcType=TIMESTAMP}, 
+      #{preIp,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.zcyoung.home.pojo.UserWithBLOBs" >
+  <insert id="insertSelective" parameterType="cn.zcyoung.home.pojo.User" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -178,6 +155,12 @@
       <if test="pic != null" >
         pic,
       </if>
+      <if test="friendList != null" >
+        friend_list,
+      </if>
+      <if test="friendListTmp != null" >
+        friend_list_tmp,
+      </if>
       <if test="role != null" >
         role,
       </if>
@@ -195,12 +178,6 @@
       </if>
       <if test="preIp != null" >
         pre_ip,
-      </if>
-      <if test="friendList != null" >
-        friend_list,
-      </if>
-      <if test="friendListTmp != null" >
-        friend_list_tmp,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -228,6 +205,12 @@
       <if test="pic != null" >
         #{pic,jdbcType=VARCHAR},
       </if>
+      <if test="friendList != null" >
+        #{friendList,jdbcType=VARCHAR},
+      </if>
+      <if test="friendListTmp != null" >
+        #{friendListTmp,jdbcType=VARCHAR},
+      </if>
       <if test="role != null" >
         #{role,jdbcType=VARCHAR},
       </if>
@@ -245,12 +228,6 @@
       </if>
       <if test="preIp != null" >
         #{preIp,jdbcType=VARCHAR},
-      </if>
-      <if test="friendList != null" >
-        #{friendList,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="friendListTmp != null" >
-        #{friendListTmp,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -287,6 +264,12 @@
       <if test="record.pic != null" >
         pic = #{record.pic,jdbcType=VARCHAR},
       </if>
+      <if test="record.friendList != null" >
+        friend_list = #{record.friendList,jdbcType=VARCHAR},
+      </if>
+      <if test="record.friendListTmp != null" >
+        friend_list_tmp = #{record.friendListTmp,jdbcType=VARCHAR},
+      </if>
       <if test="record.role != null" >
         role = #{record.role,jdbcType=VARCHAR},
       </if>
@@ -305,35 +288,7 @@
       <if test="record.preIp != null" >
         pre_ip = #{record.preIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.friendList != null" >
-        friend_list = #{record.friendList,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="record.friendListTmp != null" >
-        friend_list_tmp = #{record.friendListTmp,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update user
-    set id = #{record.id,jdbcType=INTEGER},
-      username = #{record.username,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
-      nickname = #{record.nickname,jdbcType=VARCHAR},
-      signature = #{record.signature,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      email_yz = #{record.emailYz,jdbcType=INTEGER},
-      pic = #{record.pic,jdbcType=VARCHAR},
-      role = #{record.role,jdbcType=VARCHAR},
-      state = #{record.state,jdbcType=INTEGER},
-      r_time = #{record.rTime,jdbcType=TIMESTAMP},
-      r_ip = #{record.rIp,jdbcType=VARCHAR},
-      pre_time = #{record.preTime,jdbcType=TIMESTAMP},
-      pre_ip = #{record.preIp,jdbcType=VARCHAR},
-      friend_list = #{record.friendList,jdbcType=LONGVARCHAR},
-      friend_list_tmp = #{record.friendListTmp,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -348,6 +303,8 @@
       email = #{record.email,jdbcType=VARCHAR},
       email_yz = #{record.emailYz,jdbcType=INTEGER},
       pic = #{record.pic,jdbcType=VARCHAR},
+      friend_list = #{record.friendList,jdbcType=VARCHAR},
+      friend_list_tmp = #{record.friendListTmp,jdbcType=VARCHAR},
       role = #{record.role,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=INTEGER},
       r_time = #{record.rTime,jdbcType=TIMESTAMP},
@@ -358,7 +315,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.zcyoung.home.pojo.UserWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="cn.zcyoung.home.pojo.User" >
     update user
     <set >
       <if test="username != null" >
@@ -382,6 +339,12 @@
       <if test="pic != null" >
         pic = #{pic,jdbcType=VARCHAR},
       </if>
+      <if test="friendList != null" >
+        friend_list = #{friendList,jdbcType=VARCHAR},
+      </if>
+      <if test="friendListTmp != null" >
+        friend_list_tmp = #{friendListTmp,jdbcType=VARCHAR},
+      </if>
       <if test="role != null" >
         role = #{role,jdbcType=VARCHAR},
       </if>
@@ -400,32 +363,7 @@
       <if test="preIp != null" >
         pre_ip = #{preIp,jdbcType=VARCHAR},
       </if>
-      <if test="friendList != null" >
-        friend_list = #{friendList,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="friendListTmp != null" >
-        friend_list_tmp = #{friendListTmp,jdbcType=LONGVARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.zcyoung.home.pojo.UserWithBLOBs" >
-    update user
-    set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      signature = #{signature,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      email_yz = #{emailYz,jdbcType=INTEGER},
-      pic = #{pic,jdbcType=VARCHAR},
-      role = #{role,jdbcType=VARCHAR},
-      state = #{state,jdbcType=INTEGER},
-      r_time = #{rTime,jdbcType=TIMESTAMP},
-      r_ip = #{rIp,jdbcType=VARCHAR},
-      pre_time = #{preTime,jdbcType=TIMESTAMP},
-      pre_ip = #{preIp,jdbcType=VARCHAR},
-      friend_list = #{friendList,jdbcType=LONGVARCHAR},
-      friend_list_tmp = #{friendListTmp,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.zcyoung.home.pojo.User" >
@@ -437,6 +375,8 @@
       email = #{email,jdbcType=VARCHAR},
       email_yz = #{emailYz,jdbcType=INTEGER},
       pic = #{pic,jdbcType=VARCHAR},
+      friend_list = #{friendList,jdbcType=VARCHAR},
+      friend_list_tmp = #{friendListTmp,jdbcType=VARCHAR},
       role = #{role,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       r_time = #{rTime,jdbcType=TIMESTAMP},

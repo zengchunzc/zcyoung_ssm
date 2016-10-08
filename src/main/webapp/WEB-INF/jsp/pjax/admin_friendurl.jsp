@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <title>管理友链-ZCYOUNG年轻人</title>
 
 <c:if test="${msg!=null }">
@@ -38,19 +38,19 @@
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td>${p.name }</td>
 					<c:if test="${fn:length(p.url)>40}">
-						<td><a href="/view/redirect.do?id=${p.id }" target="_Blank">${fn:substring(p.url, 0, 40)}...</a></td>
+						<td><a href="/redirect/friendurl/${p.id }" target="_Blank">${fn:substring(p.url, 0, 40)}...</a></td>
 					</c:if>
 					<c:if test="${fn:length(p.url)<=40}">
-						<td><a href="/view/redirect.do?id=${p.id }" target="_Blank">${p.url }</a></td>
+						<td><a href="/redirect/friendurl/${p.id }" target="_Blank">${p.url }</a></td>
 					</c:if>
-					<td>${p.time }</td>
+					<td><fmt:formatDate value="${p.time }" type="both" /></td>
 					<td>${p.click }</td>
-					<td><c:if test="${p.check_state==1 }">已审核</c:if> <c:if
-							test="${p.check_state!=1 }">
-							<a href="/admin/checkfriendurl.do?id=${p.id }"
+					<td><c:if test="${p.checkState==1 }">已审核</c:if> <c:if
+							test="${p.checkState!=1 }">
+							<a href="/admin/checkfriendurl/${p.id }"
 								onclick="return confirm('确定通过审核?');">审核</a>
 						</c:if></td>
-					<td><a href="/admin/deletefriendurl.do?id=${p.id }"
+					<td><a href="/admin/deletefriendurl/${p.id }"
 						onclick="return confirm('确定删除“${p.name}”这条友链?');">删除</a></td>
 
 				</tr>
@@ -61,27 +61,24 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-			<li><a data-pjax href="/view/admin_friendurl.do?page=1">&lt;&lt;</a></li>
-			<li><a data-pjax href="/view/admin_friendurl.do?page=${Page.pageIndex-1 }">&lt;</a></li>
+			<li><a data-pjax href="/admin/friendurl/1">&lt;&lt;</a></li>
+			<li><a data-pjax href="/admin/friendurl/${Page.pageIndex-1 }">&lt;</a></li>
 			<c:set value="1" var="now" />
 			<c:forEach var="item" varStatus="vs" begin="1" end="5">
-				<c:if test="${Page.pageIndex <= 3 }">
-					<c:set value="${vs.count }" var="now" />
-				</c:if>
-				<c:if test="${Page.pageIndex > Page.totalPages }">
-					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-				</c:if>
-				<c:if
-					test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
 					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
 				</c:if>
-				<li><a data-pjax href="/view/admin_friendurl.do?page=${now }"><c:if
-							test="${Page.pageIndex == now }">
-							<strong><b><u>${now }</u></b></strong>
-						</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/admin/friendurl/${now }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
 			</c:forEach>
-			<li><a data-pjax href="/view/admin_friendurl.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-			<li><a data-pjax href="/view/admin_friendurl.do?page=${Page.totalPages }">&gt;&gt;</a></li>
+			<li><a data-pjax href="/admin/friendurl/${Page.pageIndex+1 }">&gt;</a></li>
+			<li><a data-pjax href="/admin/friendurl/${Page.totalPages }">&gt;&gt;</a></li>
 		</ul>
 </div>
 
@@ -96,6 +93,7 @@
 	</div>
 </div>
 <script type="text/javascript">
+
 $(function(){
     $('#gohome').click(function(){
         $.pjax({

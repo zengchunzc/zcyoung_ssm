@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>  
 <title>友链-ZCYOUNG 年轻人</title>
 <c:if test="${msg!=null }">
 	<div class="alert alert-info">
@@ -35,12 +35,12 @@
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
 					<td>${p.name }</td>
 					<c:if test="${fn:length(p.url)>40}">
-						<td><a href="/view/redirect.do?id=${p.id }" target="_Blank">${fn:substring(p.url, 0, 40)}...</a></td>
+						<td><a href="/redirect/friendurl/${p.id }" target="_Blank">${fn:substring(p.url, 0, 40)}...</a></td>
 					</c:if>
 					<c:if test="${fn:length(p.url)<=40}">
-						<td><a href="/view/redirect.do?id=${p.id }" target="_Blank">${p.url }</a></td>
+						<td><a href="/redirect/friendurl/${p.id }" target="_Blank">${p.url }</a></td>
 					</c:if>
-					<td>${p.time }</td>
+					<td><fmt:formatDate value="${p.time }" type="both" /></td>
 					<td>${p.click }</td>
 				</tr>
 			</c:forEach>
@@ -49,46 +49,37 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-		<li><a data-pjax href="/view/friendurl.do?page=1">&lt;&lt;</a></li>
-		<li><a data-pjax
-			href="/view/friendurl.do?page=${Page.pageIndex-1 }">&lt;</a></li>
-		<c:set value="1" var="now" />
-		<c:forEach var="item" varStatus="vs" begin="1" end="5">
-			<c:if test="${Page.pageIndex <= 3 }">
-				<c:set value="${vs.count }" var="now" />
-			</c:if>
-			<c:if test="${Page.pageIndex > Page.totalPages }">
-				<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-			</c:if>
-			<c:if
-				test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
-				<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
-			</c:if>
-			<li><a data-pjax href="/view/friendurl.do?page=${now }"><c:if
-						test="${Page.pageIndex == now }">
-						<strong><b><u>${now }</u></b></strong>
-					</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
-		</c:forEach>
-		<li><a data-pjax
-			href="/view/friendurl.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-		<li><a data-pjax
-			href="/view/friendurl.do?page=${Page.totalPages }">&gt;&gt;</a></li>
-	</ul>
+			<li><a data-pjax href="/view/friendurl/1">&lt;&lt;</a></li>
+			<li><a data-pjax href="/view/friendurl/${Page.pageIndex-1 }">&lt;</a></li>
+			<c:set value="1" var="now" />
+			<c:forEach var="item" varStatus="vs" begin="1" end="5">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/view/friendurl/${now }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
+			</c:forEach>
+			<li><a data-pjax href="/view/friendurl/${Page.pageIndex+1 }">&gt;</a></li>
+			<li><a data-pjax href="/view/friendurl/${Page.totalPages }">&gt;&gt;</a></li>
+		</ul>
 </div>
 
 <div style="text-align:center;">
-
-	<form action="${pageContext.request.contextPath}/user/addfriendurl.do"
-		method="post">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">申请友链</h3>
 			</div>
 			<div class="panel-body">
-				网站名称：<input type="text" name="name">
+				网站名称：<input type="text" id="name">
 			</div>
 			<div class="panel-footer">
-				网站地址：<input type="text" name="url">
+				网站地址：<input type="text" id="url">
 			</div>
 			<div class="panel-body">
 				用户昵称：
@@ -100,16 +91,36 @@
 				</c:if>
 			</div>
 			<div class="panel-footer">
-				<button class="btn btn-large btn-info" type="submit"
+				<button class="btn btn-large btn-info" onclick="sub();"
 					<c:if test="${User==null }">disabled="disabled"</c:if>>提交申请</button>
 				<button class="btn btn-large btn-info" type="button" id="gohome" >返回首页</button>
-
 			</div>
 		</div>
-	</form>
 </div>
 
 <script type="text/javascript">
+
+function sub(){
+try{
+	var name = $("#name").val();
+	var url = $("#url").val();
+	if(name == "" || url == ""){
+		alert("不能有为空项。");
+		return;
+	}
+	if(url.indexOf("http") == -1) url = "http://" + url;
+	$.post("/user/addfu", {
+		name : name,
+		url : url
+	}, function(data, status){
+		if(status == "success"){
+			if(data.indexOf("ok") != -1){
+				alert("申请成功，等待管理员审核。");
+			}else alert("申请错误。");
+		}
+	});
+}catch(e){alert(e);}
+}
 
 $(function(){
     $('#gohome').click(function(){
@@ -119,7 +130,6 @@ $(function(){
             timeout: 10000
         });
     });
-
 
 }); 
 </script>

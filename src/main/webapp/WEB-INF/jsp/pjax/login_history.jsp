@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>  
 
 <title>登录历史-ZCYOUNG 年轻人</title>
 
@@ -27,13 +28,13 @@
 					<c:if test="${no.count%5==4 }">class="warning"</c:if>
 					<c:if test="${no.count%5==0 }">class="info"</c:if>>
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td>${p.l_time }</td>
-					<td>${p.l_ip }</td>
-					<c:if test="${fn:length(p.user_agent)>90}">
-						<td>${fn:substring(p.user_agent, 0, 90)}...</td>
+					<td><fmt:formatDate value="${p.lTime }" type="both" /></td>
+					<td>${p.lIp }</td>
+					<c:if test="${fn:length(p.userAgent)>90}">
+						<td>${fn:substring(p.userAgent, 0, 90)}...</td>
 					</c:if>
-					<c:if test="${fn:length(p.user_agent)<=90}">
-						<td>${p.user_agent }</td>
+					<c:if test="${fn:length(p.userAgent)<=90}">
+						<td>${p.userAgent }</td>
 					</c:if>
 
 				</tr>
@@ -44,27 +45,24 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-			<li><a data-pjax href="/view/login_history.do?page=1">&lt;&lt;</a></li>
-			<li><a data-pjax href="/view/login_history.do?page=${Page.pageIndex-1 }">&lt;</a></li>
+			<li><a data-pjax href="/view/loginhistory/1">&lt;&lt;</a></li>
+			<li><a data-pjax href="/view/loginhistory/${Page.pageIndex-1 }">&lt;</a></li>
 			<c:set value="1" var="now" />
 			<c:forEach var="item" varStatus="vs" begin="1" end="5">
-				<c:if test="${Page.pageIndex <= 3 }">
-					<c:set value="${vs.count }" var="now" />
-				</c:if>
-				<c:if test="${Page.pageIndex > Page.totalPages }">
-					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-				</c:if>
-				<c:if
-					test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
 					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
 				</c:if>
-				<li><a data-pjax href="/view/login_history.do?page=${now }"><c:if
-							test="${Page.pageIndex == now }">
-							<strong><b><u>${now }</u></b></strong>
-						</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/view/loginhistory/${now }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
 			</c:forEach>
-			<li><a data-pjax href="/view/login_history.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-			<li><a data-pjax href="/view/login_history.do?page=${Page.totalPages }">&gt;&gt;</a></li>
+			<li><a data-pjax href="/view/loginhistory/${Page.pageIndex+1 }">&gt;</a></li>
+			<li><a data-pjax href="/view/loginhistory/${Page.totalPages }">&gt;&gt;</a></li>
 		</ul>
 </div>
 <div style="text-align:center;">

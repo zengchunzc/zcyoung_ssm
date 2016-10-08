@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <title>管理会员-ZCYOUNG 年轻人</title>
 
 <c:if test="${msg!=null }">
@@ -14,6 +14,11 @@
 	<div class="panel-heading">
 		<h3 class="panel-title">管理会员</h3>
 	</div>
+</div>
+<div style="text-align:right;">
+	<form data-pjax action="/admin/user" method="post">
+		 <input type="text" name="key"  placeholder="请输入关键字，回车搜索会员">
+	</form>
 </div>
 <table class="table table-striped">
 	<thead>
@@ -36,12 +41,12 @@
 					<c:if test="${no.count%5==4 }">class="warning"</c:if>
 					<c:if test="${no.count%5==0 }">class="info"</c:if>>
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td><a href="/view/space.do?id=${p.id }">${p.username }</a></td>
+					<td><a data-pjax href="/view/space/${p.username }">${p.username }</a></td>
 					<td>${p.nickname }</td>
 					<td>${p.email }</td>
 					<td>${p.role }</td>
-					<td>${p.pre_time }</td>
-					<td><a href="/admin/recpassword.do?id=${p.id }"
+					<td><fmt:formatDate value="${p.preTime }" type="both" /></td>
+					<td><a data-pjax href="/admin/repassword/${p.id }"
 						onclick="return confirm('确定重置${p.nickname}的密码?');">重置</a></td>
 				</tr>
 			</c:forEach>
@@ -51,31 +56,25 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-		<li><a data-pjax href="/view/admin_user.do?page=1">&lt;&lt;</a></li>
-		<li><a data-pjax
-			href="/view/admin_user.do?page=${Page.pageIndex-1 }">&lt;</a></li>
-		<c:set value="1" var="now" />
-		<c:forEach var="item" varStatus="vs" begin="1" end="5">
-			<c:if test="${Page.pageIndex <= 3 }">
-				<c:set value="${vs.count }" var="now" />
-			</c:if>
-			<c:if test="${Page.pageIndex > Page.totalPages }">
-				<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-			</c:if>
-			<c:if
-				test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
-				<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
-			</c:if>
-			<li><a data-pjax href="/view/admin_user.do?page=${now }"><c:if
-						test="${Page.pageIndex == now }">
-						<strong><b><u>${now }</u></b></strong>
-					</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
-		</c:forEach>
-		<li><a data-pjax
-			href="/view/admin_user.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-		<li><a data-pjax
-			href="/view/admin_user.do?page=${Page.totalPages }">&gt;&gt;</a></li>
-	</ul>
+			<li><a data-pjax href="/admin/user/1/${Key}">&lt;&lt;</a></li>
+			<li><a data-pjax href="/admin/user/${Page.pageIndex-1 }/${Key}">&lt;</a></li>
+			<c:set value="1" var="now" />
+			<c:forEach var="item" varStatus="vs" begin="1" end="5">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/admin/user/${now }/${Key}">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
+			</c:forEach>
+			<li><a data-pjax href="/admin/user/${Page.pageIndex+1 }/${Key}">&gt;</a></li>
+			<li><a data-pjax href="/admin/user/${Page.totalPages }/${Key}">&gt;&gt;</a></li>
+		</ul>
 </div>
 
 <div style="text-align:center;">
@@ -95,14 +94,14 @@
 $(function(){
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#goadmin').click(function(){
         $.pjax({
-            url: '/view/admin.do',
+            url: '/view/admin',
             container: '#pjax-container',
             timeout: 10000
         });

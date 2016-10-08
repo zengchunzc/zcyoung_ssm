@@ -19,6 +19,10 @@ public class User {
 
     private String pic;
 
+    private String friendList;
+
+    private String friendListTmp;
+
     private String role;
 
     private Integer state;
@@ -93,6 +97,22 @@ public class User {
 
     public void setPic(String pic) {
         this.pic = pic == null ? null : pic.trim();
+    }
+
+    public String getFriendList() {
+        return friendList;
+    }
+
+    public void setFriendList(String friendList) {
+        this.friendList = friendList == null ? null : friendList.trim();
+    }
+
+    public String getFriendListTmp() {
+        return friendListTmp;
+    }
+
+    public void setFriendListTmp(String friendListTmp) {
+        this.friendListTmp = friendListTmp == null ? null : friendListTmp.trim();
     }
 
     public String getRole() {

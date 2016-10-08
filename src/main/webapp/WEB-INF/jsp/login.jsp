@@ -24,7 +24,7 @@
 				<jsp:include page="pjax/login.jsp"></jsp:include>
 			</div>
 			<div class="span2">
-				<c:import url="/view/left.do"></c:import>
+				<c:import url="/view/left"></c:import>
 			</div>
 			<div class="span1"></div>
 

@@ -41,7 +41,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		        }  
 				
 				//返回到登录界面
-				response.sendRedirect("/view/login.do?fromUrl="+request.getRequestURL()+"?"+queryString);
+		        if(queryString == null || queryString.equals(""))
+		        	response.sendRedirect("/view/login?fromUrl="+request.getRequestURL());
+		        else response.sendRedirect("/view/login?fromUrl="+request.getRequestURL()+"?"+queryString);
 				return false;
 			}       
 		}
@@ -49,3 +51,5 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			return true;   
 	}
 }
+
+

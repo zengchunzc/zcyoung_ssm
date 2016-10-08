@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -23,9 +24,8 @@
 
 </div>
 <div style="text-align:right;">
-	<form data-pjax action="/view/newslist.do" method="post">
-		搜索新闻： <input type="text" name="key" value="${key }"> <input
-			type="submit" class="btn btn-info" value="搜索">
+	<form data-pjax action="/news" method="post">
+		 <input type="text" name="key"  placeholder="请输入关键字，回车搜索新闻">
 	</form>
 </div>
 <table class="table table-striped">
@@ -36,7 +36,6 @@
 			<th>标签</th>
 			<th>发布时间</th>
 			<th>点击量</th>
-
 		</tr>
 	</thead>
 	<tbody>
@@ -48,9 +47,9 @@
 					<c:if test="${no.count%5==4 }">class="warning"</c:if>
 					<c:if test="${no.count%5==0 }">class="info"</c:if>>
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td><a data-pjax href="/view/news.do?id=${p.id }">${p.name }</a></td>
+					<td><a data-pjax href="/news/${p.id }">${p.name }</a></td>
 					<td>${p.author }</td>
-					<td>${p.sendtime }</td>
+					<td><fmt:formatDate value="${p.sendtime }" type="both" /></td>
 					<td>${p.click }</td>
 				</tr>
 			</c:forEach>
@@ -59,46 +58,25 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-		<li><a data-pjax href="/view/newslist.do?page=1&key=${key}">&lt;&lt;</a>
-		</li>
-		<li><a data-pjax href="/view/newslist.do?page=${Page.pageIndex-1}&key=${key}">&lt;</a>
-		</li>
-		<c:forEach var="item" varStatus="vs" begin="1" end="5">
-			<c:if test="${Page.pageIndex<=3 }">
-				<li><a data-pjax href="/view/newslist.do?page=${vs.count}&key=${key}">
-						<c:if test="${vs.count==Page.pageIndex }">
-							<strong><b><u>${vs.count}</u></b></strong>
-						</c:if> <c:if test="${vs.count!=Page.pageIndex }">
-  								${vs.count}
-  							</c:if>
+			<li><a data-pjax href="/news/list/1/${Key }">&lt;&lt;</a></li>
+			<li><a data-pjax href="/news/list/${Page.pageIndex-1 }/${Key }">&lt;</a></li>
+			<c:set value="1" var="now" />
+			<c:forEach var="item" varStatus="vs" begin="1" end="5">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/news/list/${now }/${Key }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
 				</a></li>
-			</c:if>
-			<c:if test="${Page.pageIndex>3 && Page.pageIndex<Page.totalPages-3}">
-				<li><a data-pjax href="/view/newslist.do?page=${vs.count+Page.pageIndex-3}&key=${key}">
-
-
-						<c:if test="${vs.count+Page.pageIndex-3==Page.pageIndex }">
-							<strong><b><u>${vs.count+Page.pageIndex-3}</u></b></strong>
-						</c:if> <c:if test="${vs.count+Page.pageIndex-3!=Page.pageIndex }">
-  								${vs.count+Page.pageIndex-3}
-  							</c:if>
-				</a></li>
-			</c:if>
-			<c:if test="${Page.pageIndex>3 && Page.pageIndex>=Page.totalPages-3}">
-				<li><a data-pjax href="/view/newslist.do?page=${Page.totalPages-5+vs.count}&key=${key}">
-						<c:if test="${Page.totalPages-5+vs.count==Page.pageIndex }">
-							<strong><b><u>${Page.totalPages-5+vs.count}</u></b></strong>
-						</c:if> <c:if test="${Page.totalPages-5+vs.count!=Page.pageIndex }">
-  								${Page.totalPages-5+vs.count}
-  							</c:if>
-				</a></li>
-			</c:if>
-		</c:forEach>
-		<li><a data-pjax href="${pageContext.request.contextPath}/view/newslist.do?page=${Page.pageIndex+1}&key=${key}">&gt;</a>
-		</li>
-		<li><a data-pjax href="${pageContext.request.contextPath}/view/newslist.do?page=${Page.totalPages }&key=${key}">&gt;&gt;</a>
-		</li>
-	</ul>
+			</c:forEach>
+			<li><a data-pjax href="/news/list/${Page.pageIndex+1 }/${Key }">&gt;</a></li>
+			<li><a data-pjax href="/news/list/${Page.totalPages }/${Key }">&gt;&gt;</a></li>
+		</ul>
 </div>
 
 <script type="text/javascript">

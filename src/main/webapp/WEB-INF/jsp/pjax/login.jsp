@@ -21,10 +21,10 @@
 				<h3 class="panel-title">欢迎登录</h3>
 			</div>
 			<div class="panel-body">
-				用户账户：<input id="username" type="text" name="username">
+				用户账户：<input id="username" type="text" name="username" onkeydown='if(event.keyCode==13){SubmitLogin();}'>
 			</div>
 			<div class="panel-footer">
-				用户密码：<input type="password" name="password" id="password"> <input
+				用户密码：<input type="password" name="password" id="password" onkeydown='if(event.keyCode==13){SubmitLogin();}'> <input
 					type="hidden" id="fromUrl" name="fromUrl"
 					value="${param.fromUrl!=null?param.fromUrl:fromUrl }"> <br>
 				<div id="Logining"></div>
@@ -34,9 +34,21 @@
 						checked="checked" />7天免登陆
 				</p>
 				<button class="btn btn-large" type="button" onclick="SubmitLogin()">登录</button>
-				<button class="btn btn-large btn-info" type="button"
-					onclick="location='/view/regist.do'">注册</button>
+				<button class="btn btn-large btn-info" type="button" id="regist" >注册</button>
 			</div>
 		</div>
 	</form>
 </div>
+
+<script type="text/javascript">
+
+$(function(){
+    $('#regist').click(function(){
+        $.pjax({
+            url: '/view/regist.do',
+            container: '#pjax-container',
+            timeout: 10000
+        });
+    });
+});
+</script>

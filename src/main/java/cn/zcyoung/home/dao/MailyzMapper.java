@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface MailyzMapper {
     int countByExample(MailyzExample example);
+    
+    int countTodayCount(Integer id);
 
     int deleteByExample(MailyzExample example);
 

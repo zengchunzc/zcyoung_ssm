@@ -41,6 +41,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
 <script type="text/javascript" src="/js/jquery.pjax.js"></script>
 <script type="text/javascript" src="/js/jquery-ui"></script>
+<script type="text/javascript" src="/js/jquery.qrcode.min.js"></script>
 <link
 	href="/css/bootstrap-combined.min.css"
 	rel="stylesheet" media="screen">

@@ -37,12 +37,20 @@
 				<div id="Registing"></div>
 				<br>
 				<button class="btn btn-large" type="button" onclick="SubmitRegist()">注册</button>
-				<button class="btn btn-large btn-info" type="button"
-					onclick="location='/view/login.do'">前往登录</button>
+				<button class="btn btn-large btn-info" type="button" id="login" >前往登录</button>
 			</div>
 		</div>
-
-
 	</form>
-
 </div>
+<script type="text/javascript">
+
+$(function(){
+    $('#login').click(function(){
+        $.pjax({
+            url: '/view/login.do',
+            container: '#pjax-container',
+            timeout: 10000
+        });
+    });
+});
+</script>

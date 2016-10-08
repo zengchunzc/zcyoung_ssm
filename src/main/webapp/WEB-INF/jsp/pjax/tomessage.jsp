@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
 <title>发件箱-ZCYOUNG 年轻人</title>
 
@@ -27,9 +28,17 @@
 				<tr <c:if test="${no.count%2==0 }"></c:if>
 					<c:if test="${no.count%2==1 }">class="info"</c:if>>
 					<td>【${no.count+((Page.pageIndex-1)*Page.pageSize) }】&nbsp;&nbsp;&nbsp;&nbsp;
-						发送给<a href="/view/space.do?id=${p.toUser.id }">${p.toUser.nickname }</a>：${p.data }
-						(${p.time })
+						发送至<a data-pjax href="/view/space/${map[p.toId].username }">${map[p.toId].nickname }</a>：${p.data }
+						
 					</td>
+					<td><fmt:formatDate value="${p.time }" type="both" /></td>
+					<c:if test="${p.url == null || p.url == ''}">
+						<td><a href="javscript:void(0);" onclick="sendmessage(${p.toId})">回复</a></td>
+					</c:if>
+					<c:if test="${p.url != null && p.url != ''}">
+						<td><a href="${p.url }">查看</a></td>
+					</c:if>
+					
 				</tr>
 			</c:forEach>
 		</c:if>
@@ -37,31 +46,25 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-		<li><a data-pjax href="/view/tomessage.do?page=1">&lt;&lt;</a></li>
-		<li><a data-pjax
-			href="/view/tomessage.do?page=${Page.pageIndex-1 }">&lt;</a></li>
-		<c:set value="1" var="now" />
-		<c:forEach var="item" varStatus="vs" begin="1" end="5">
-			<c:if test="${Page.pageIndex <= 3 }">
-				<c:set value="${vs.count }" var="now" />
-			</c:if>
-			<c:if test="${Page.pageIndex > Page.totalPages }">
-				<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-			</c:if>
-			<c:if
-				test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
-				<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
-			</c:if>
-			<li><a data-pjax href="/view/tomessage.do?page=${now }"><c:if
-						test="${Page.pageIndex == now }">
-						<strong><b><u>${now }</u></b></strong>
-					</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
-		</c:forEach>
-		<li><a data-pjax
-			href="/view/tomessage.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-		<li><a data-pjax
-			href="/view/tomessage.do?page=${Page.totalPages }">&gt;&gt;</a></li>
-	</ul>
+			<li><a data-pjax href="/message/sended/1">&lt;&lt;</a></li>
+			<li><a data-pjax href="/message/sended/${Page.pageIndex-1 }">&lt;</a></li>
+			<c:set value="1" var="now" />
+			<c:forEach var="item" varStatus="vs" begin="1" end="5">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/message/sended/${now }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
+			</c:forEach>
+			<li><a data-pjax href="/message/sended/${Page.pageIndex+1 }">&gt;</a></li>
+			<li><a data-pjax href="/message/sended/${Page.totalPages }">&gt;&gt;</a></li>
+		</ul>
 </div>
 <div style="text-align:center;">
 	<button class="btn btn-large btn-info" type="button" id="gosend" >返回收件箱</button>
@@ -75,18 +78,47 @@
 $(function(){
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#gosend').click(function(){
         $.pjax({
-            url: '/view/message.do',
+            url: '/message',
             container: '#pjax-container',
             timeout: 10000
         });
     });
 }); 
+
+function sendmessage(id)
+{
+	var str=prompt("请输入要发送的信息 ");
+	if(str)
+	{
+	try{
+        $.post("/message/send/",{
+        id: id,
+        data: str
+		},function(data,status){
+		if(status == "success"){
+			if(data.indexOf("ok") != -1) {
+				alert("消息已发送。");
+				$.pjax({
+            	url: '/message/sended',
+            	container: '#pjax-container',
+            	timeout: 10000
+        		});	
+			}
+			else if(data.indexOf("error") != -1)alert("消息发送失败。");
+			else alert(data);
+		}
+	});
+    }catch(e){alert(e);}
+	}
+}
+
+
 </script>
 

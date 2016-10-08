@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -20,7 +21,7 @@
 			onclick="javascript:history.go(-1);">返回</button>
 		<h3 align="center">${News.name }</h3>
 		<p align="center">
-			标签：${News.author }&nbsp;&nbsp;&nbsp;发布于：${News.sendtime }&nbsp;&nbsp;&nbsp;阅读数：${News.click }&nbsp;&nbsp;
+			标签：${News.author }&nbsp;&nbsp;&nbsp;发布于：<fmt:formatDate value="${News.sendtime }" type="both" />&nbsp;&nbsp;&nbsp;阅读数：${News.click }&nbsp;&nbsp;
 			<a href="${News.source }" target="_blank">原始链接</a>
 		</p>
 	</c:if>

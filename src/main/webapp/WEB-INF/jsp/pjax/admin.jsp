@@ -17,10 +17,6 @@
 	<button class="btn btn-large btn-info" type="button" id="af" >管理友链</button>
 	&nbsp;
 	<button class="btn btn-large btn-info" type="button" id="au" >管理会员</button>
-	&nbsp;
-	<button class="btn btn-large btn-info" type="button" id="api">API服务</button>
-	&nbsp;
-	<button class="btn btn-large btn-info" type="button" id="liuliang">流量签到</button>
 	<br>
 	<br>
 	<button class="btn btn-large btn-info" type="button" id="gohome">返回个人中心</button>
@@ -30,35 +26,28 @@
 $(function(){
     $('#af').click(function(){
         $.pjax({
-            url: '/view/admin_friendurl.do',
+            url: '/admin/friendurl',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
-            container: '#pjax-container',
-            timeout: 10000
-        });
-    });
-    $('#liuliang').click(function(){
-        $.pjax({
-            url: '/view/qiandao.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#au').click(function(){
         $.pjax({
-            url: '/view/admin_user.do',
+            url: '/admin/user',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#api').click(function(){
         $.pjax({
-            url: '/view/api.do',
+            url: '/view/api',
             container: '#pjax-container',
             timeout: 10000
         });

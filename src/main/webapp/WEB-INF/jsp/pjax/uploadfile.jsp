@@ -15,7 +15,7 @@
 				<strong>提示!</strong> ${msg }.
 			</div>
 		</c:if>
-		<form action="/user/upload.do" method="post"
+		<form action="/file/upload/now" method="post"
 			enctype="multipart/form-data">
 			请选择文件(50m以内)：<input type="file" name="uf"> &nbsp;
 			<p>
@@ -33,14 +33,14 @@
 $(function(){
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#adminf').click(function(){
         $.pjax({
-            url: '/view/myfile.do',
+            url: '/file/my',
             container: '#pjax-container',
             timeout: 10000
         });

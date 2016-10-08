@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt"%>  
 <title>文章列表-ZCYOUNG 年轻人</title>
 <c:if test="${msg!=null }">
 	<div class="alert alert-info">
@@ -12,6 +13,11 @@
 	<div class="panel-heading">
 		<h3 class="panel-title">文章区</h3>
 	</div>
+</div>
+<div style="text-align:right;">
+	<form data-pjax action="/article" method="post">
+		 <input type="text" name="key"  placeholder="请输入关键字，回车搜索文章">
+	</form>
 </div>
 <table class="table table-striped">
 	<thead>
@@ -32,11 +38,10 @@
 					<c:if test="${no.count%5==4 }">class="warning"</c:if>
 					<c:if test="${no.count%5==0 }">class="info"</c:if>>
 					<td>${no.count+((Page.pageIndex-1)*Page.pageSize) }&nbsp;&nbsp;&nbsp;&nbsp;</td>
-					<td><a data-pjax href="/view/article.do?id=${p.id }">${p.title }</a></td>
-					<td>${p.w_time }</td>
-					<td>${p.u_time }</td>
+					<td><a data-pjax href="/article/${p.id }">${p.title }</a></td>
+					<td><fmt:formatDate value="${p.wTime }" type="both" /></td>
+					<td><fmt:formatDate value="${p.uTime }" type="both" /></td>
 					<td>${p.click }</td>
-
 				</tr>
 			</c:forEach>
 
@@ -45,44 +50,34 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-		<li><a data-pjax href="/view/articlelist.do?page=1">&lt;&lt;</a></li>
-		<li><a data-pjax
-			href="/view/articlelist.do?page=${Page.pageIndex-1 }">&lt;</a></li>
-		<c:set value="1" var="now" />
-		<c:forEach var="item" varStatus="vs" begin="1" end="5">
-			<c:if test="${Page.pageIndex <= 3 }">
-				<c:set value="${vs.count }" var="now" />
-			</c:if>
-			<c:if test="${Page.pageIndex > Page.totalPages }">
-				<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-			</c:if>
-			<c:if
-				test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
-				<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
-			</c:if>
-			<li><a data-pjax href="/view/articlelist.do?page=${now }"><c:if
-						test="${Page.pageIndex == now }">
-						<strong><b><u>${now }</u></b></strong>
-					</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
-		</c:forEach>
-		<li><a data-pjax
-			href="/view/articlelist.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-		<li><a data-pjax
-			href="/view/articlelist.do?page=${Page.totalPages }">&gt;&gt;</a></li>
-	</ul>
+			<li><a data-pjax href="/article/list/1/${Key}">&lt;&lt;</a></li>
+			<li><a data-pjax href="/article/list/${Page.pageIndex-1 }/${Key}">&lt;</a></li>
+			<c:set value="1" var="now" />
+			<c:forEach var="item" varStatus="vs" begin="1" end="5">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/article/list/${now }/${Key}">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
+			</c:forEach>
+			<li><a data-pjax href="/article/list/${Page.pageIndex+1 }/${Key}">&gt;</a></li>
+			<li><a data-pjax href="/article/list/${Page.totalPages }/${Key}">&gt;&gt;</a></li>
+		</ul>
 	<br>
 	<br>
-	<button class="btn btn-large btn-info" type="button" id="gohome" >返回个人中心</button>
 </div>
 
 <script type="text/javascript">
 $(function(){
-    $('#gohome').click(function(){
-        $.pjax({
-            url: '/view/home.do',
-            container: '#pjax-container',
-            timeout: 10000
-        });
-    });
+    $(document).on('submit', 'form[data-pjax]', function(event) {
+  		$.pjax.submit(event, '#pjax-container')
+	});
 }); 
+	
 </script>

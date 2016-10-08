@@ -18,21 +18,21 @@
 $(function(){
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#ToMP').click(function(){
         $.pjax({
-            url: '/view/modify_password.do',
+            url: '/view/modifypassword',
             container: '#pjax-container',
             timeout: 10000
         });
     });
     $('#ToHistory').click(function(){
         $.pjax({
-            url: '/view/login_history.do',
+            url: '/view/loginhistory',
             container: '#pjax-container',
             timeout: 10000
         });

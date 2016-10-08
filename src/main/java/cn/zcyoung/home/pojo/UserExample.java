@@ -1,6 +1,7 @@
 package cn.zcyoung.home.pojo;
 
-import cn.zcyoung.home.util.Page;
+import cn.zcyoung.home.utils.Page;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -653,6 +654,146 @@ public class UserExample {
 
         public Criteria andPicNotBetween(String value1, String value2) {
             addCriterion("pic not between", value1, value2, "pic");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListIsNull() {
+            addCriterion("friend_list is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListIsNotNull() {
+            addCriterion("friend_list is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListEqualTo(String value) {
+            addCriterion("friend_list =", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListNotEqualTo(String value) {
+            addCriterion("friend_list <>", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListGreaterThan(String value) {
+            addCriterion("friend_list >", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListGreaterThanOrEqualTo(String value) {
+            addCriterion("friend_list >=", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListLessThan(String value) {
+            addCriterion("friend_list <", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListLessThanOrEqualTo(String value) {
+            addCriterion("friend_list <=", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListLike(String value) {
+            addCriterion("friend_list like", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListNotLike(String value) {
+            addCriterion("friend_list not like", value, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListIn(List<String> values) {
+            addCriterion("friend_list in", values, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListNotIn(List<String> values) {
+            addCriterion("friend_list not in", values, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListBetween(String value1, String value2) {
+            addCriterion("friend_list between", value1, value2, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListNotBetween(String value1, String value2) {
+            addCriterion("friend_list not between", value1, value2, "friendList");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpIsNull() {
+            addCriterion("friend_list_tmp is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpIsNotNull() {
+            addCriterion("friend_list_tmp is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpEqualTo(String value) {
+            addCriterion("friend_list_tmp =", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpNotEqualTo(String value) {
+            addCriterion("friend_list_tmp <>", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpGreaterThan(String value) {
+            addCriterion("friend_list_tmp >", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpGreaterThanOrEqualTo(String value) {
+            addCriterion("friend_list_tmp >=", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpLessThan(String value) {
+            addCriterion("friend_list_tmp <", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpLessThanOrEqualTo(String value) {
+            addCriterion("friend_list_tmp <=", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpLike(String value) {
+            addCriterion("friend_list_tmp like", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpNotLike(String value) {
+            addCriterion("friend_list_tmp not like", value, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpIn(List<String> values) {
+            addCriterion("friend_list_tmp in", values, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpNotIn(List<String> values) {
+            addCriterion("friend_list_tmp not in", values, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpBetween(String value1, String value2) {
+            addCriterion("friend_list_tmp between", value1, value2, "friendListTmp");
+            return (Criteria) this;
+        }
+
+        public Criteria andFriendListTmpNotBetween(String value1, String value2) {
+            addCriterion("friend_list_tmp not between", value1, value2, "friendListTmp");
             return (Criteria) this;
         }
 

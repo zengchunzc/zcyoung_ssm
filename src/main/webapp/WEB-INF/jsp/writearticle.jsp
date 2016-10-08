@@ -7,22 +7,23 @@
 			+ path + "/";
 %>
 
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <title>写文章-ZCYOUNG 年轻人</title>
 <jsp:include page="head.jsp"></jsp:include>
 <link rel="stylesheet"
-	href="../js/kindeditor/themes/default/default.css" />
-<link rel="stylesheet" href="../js/kindeditor/plugins/code/prettify.css" />
-<script charset="utf-8" src="../js/kindeditor/kindeditor-all.js"></script>
-<script charset="utf-8" src="../js/kindeditor/lang/zh-CN.js"></script>
-<script charset="utf-8" src="../js/kindeditor/plugins/code/prettify.js"></script>
+	href="/js/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="/js/kindeditor/plugins/code/prettify.css" />
+<script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
+<script charset="utf-8" src="/js/kindeditor/lang/zh-CN.js"></script>
+<script charset="utf-8" src="/js/kindeditor/plugins/code/prettify.js"></script>
 <script>
 	KindEditor.ready(function(K) {
 		var editor1 = K.create('textarea[name="content1"]', {
-			cssPath : '../js/kindeditor/plugins/code/prettify.css',
-			uploadJson : '../js/kindeditor/jsp/upload_json.jsp',
-			fileManagerJson : '../js/kindeditor/jsp/file_manager_json.jsp',
+			cssPath : '/js/kindeditor/plugins/code/prettify.css',
+			uploadJson : '/file/upload_json',
+			fileManagerJson : '/js/kindeditor/jsp/file_manager_json.jsp',
 			allowFileManager : true,
 			afterCreate : function() {
 				var self = this;
@@ -63,12 +64,6 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">欢迎发布一个新文章</h3>
-						<c:if test="${msg!=null }">
-							<div class="alert alert-info">
-								<button type="button" class="close" data-dismiss="alert">×</button>
-								<strong>提示!</strong> ${msg }.
-							</div>
-						</c:if>
 						<form>
 							<div class="panel panel-default">
 								<div class="panel-body">
@@ -83,26 +78,60 @@
 								<textarea name="content1" id="MyArticle" cols="100" rows="80"
 									style="width:100%;height:400px;visibility:hidden;"></textarea>
 							</div>
-							<div id="Writing"></div>
-							<br>
+							<div id="msg"> </div>
 							<button class="btn btn-large btn-info" type="button"
 								onclick="WriteArticle()">发布文章</button>
-
 						</form>
-
 					</div>
-
 				</div>
-
-
 			</div>
 			<div class="span2">
-				<c:import url="/view/left.do"></c:import>
+				<c:import url="/view/left"></c:import>
 			</div>
 			<div class="span1"></div>
-
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
+<script>
+
+function go(url){ 
+	location.href = url;
+}
+
+function getmsg(mes){
+	return "<div class='alert alert-info'><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>提示!</strong> " + mes +"</div>";
+}
+
+function WriteArticle(){
+	SyncEditor();
+	
+	var title = 	$("#title").val();
+	var gk = 		GetRadioValue("gk");
+	var MyArticle = $("#MyArticle").val();
+	if(title.length == 0 || gk.length == 0 || MyArticle.length ==0){
+		$("#msg").html(getmsg("提示：不能有为空项。"));
+		return ;
+	}
+	$("#msg").html(getmsg("正在保存中..."));
+	$.post("/article/add",
+			{
+		title:title,
+		gk:gk,
+		MyArticle:MyArticle
+			},function(data,status){
+				if(status == "success"){
+					if(data.indexOf("ok")!=-1) {
+						$("#msg").html(getmsg("发布成功，3s后跳转"));
+						setTimeout(go("/article/my"), 3000);
+					}
+					else $("#msg").html(getmsg("发布失败。" + data.substring(6)));
+				}
+			});
+}
+
+</script>
 </body>
 </html>
+
+
+

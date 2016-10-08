@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %> 
 <title>我的文件-ZCYOUNG年轻人</title>
 
 <c:if test="${msg!=null }">
@@ -43,12 +43,12 @@
 						<td>${p.name }</td>
 					</c:if>
 					<td>${p.size }</td>
-					<td>${p.time }</td>
+					<td><fmt:formatDate value="${p.time }" type="both" /></td>
 					<td><c:if test="${p.pri==0 }">是</c:if>
 						<c:if test="${p.pri==1 }">否</c:if></td>
-					<td><a href="/download/file.do?id=${p.id }">下载</a></td>
-					<td><a href="/user/delete_file.do?id=${p.id }"
-						onclick="return confirm('确定删除?');">删除</a></td>
+					<td><a href="/file/down/${p.id }">下载</a></td>
+					<td><a data-pjax href="/file/delete/${p.id }"
+						onclick="return confirm('确定删除?删除后无法恢复。');">删除</a></td>
 				</tr>
 			</c:forEach>
 		</c:if>
@@ -56,27 +56,24 @@
 </table>
 <div class="pagination pagination-centered">
 	<ul>
-			<li><a data-pjax href="/view/myfile.do?page=1">&lt;&lt;</a></li>
-			<li><a data-pjax href="/view/myfile.do?page=${Page.pageIndex-1 }">&lt;</a></li>
+			<li><a data-pjax href="/file/my/1">&lt;&lt;</a></li>
+			<li><a data-pjax href="/file/my/${Page.pageIndex-1 }">&lt;</a></li>
 			<c:set value="1" var="now" />
 			<c:forEach var="item" varStatus="vs" begin="1" end="5">
-				<c:if test="${Page.pageIndex <= 3 }">
-					<c:set value="${vs.count }" var="now" />
-				</c:if>
-				<c:if test="${Page.pageIndex > Page.totalPages }">
-					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
-				</c:if>
-				<c:if
-					test="${Page.pageIndex >3 && Page.pageIndex <= Page.totalPages }">
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex < Page.totalPages - 3 }">
 					<c:set value="${vs.count+Page.pageIndex-3 }" var="now" />
 				</c:if>
-				<li><a data-pjax href="/view/myfile.do?page=${now }"><c:if
-							test="${Page.pageIndex == now }">
-							<strong><b><u>${now }</u></b></strong>
-						</c:if> <c:if test="${Page.pageIndex != now }">${now }</c:if></a></li>
+				<c:if test="${Page.pageIndex > 3 && Page.pageIndex >= Page.totalPages - 3 }">
+					<c:set value="${vs.count+Page.totalPages-5 }" var="now" />
+				</c:if>
+				<c:if test="${Page.pageIndex <= 3 || Page.totalPages <= 5}"><c:set value="${vs.count }" var="now" /></c:if>
+				<li><a data-pjax href="/file/my/${now }">
+					<c:if test="${Page.pageIndex == now }"><strong><b><u>${now }</u></b></strong></c:if> 
+					<c:if test="${Page.pageIndex != now }">${now }</c:if>
+				</a></li>
 			</c:forEach>
-			<li><a data-pjax href="/view/myfile.do?page=${Page.pageIndex+1 }">&gt;</a></li>
-			<li><a data-pjax href="/view/myfile.do?page=${Page.totalPages }">&gt;&gt;</a></li>
+			<li><a data-pjax href="/file/my/${Page.pageIndex+1 }">&gt;</a></li>
+			<li><a data-pjax href="/file/my/${Page.totalPages }">&gt;&gt;</a></li>
 		</ul>
 	<br> <br>
 	<button class="btn btn-large btn-info" type="button" id="up" >上传文件</button>
@@ -88,7 +85,7 @@
 $(function(){
     $('#gohome').click(function(){
         $.pjax({
-            url: '/view/home.do',
+            url: '/view/home',
             container: '#pjax-container',
             timeout: 10000
         });
@@ -97,7 +94,7 @@ $(function(){
 $(function(){
     $('#up').click(function(){
         $.pjax({
-            url: '/view/uploadfile.do',
+            url: '/file/upload',
             container: '#pjax-container',
             timeout: 10000
         });

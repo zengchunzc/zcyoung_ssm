@@ -151,6 +151,9 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="countTodayCount" parameterType="java.lang.Integer" resultType="java.lang.Integer" >
+    select count(*) from mailyz where date(time) = curdate() and user_id = #{id,jdbcType=INTEGER}
+  </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update mailyz
     <set >

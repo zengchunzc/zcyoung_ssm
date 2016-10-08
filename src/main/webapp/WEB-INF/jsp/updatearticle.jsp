@@ -6,22 +6,22 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <title>修改文章-ZCYOUNG 年轻人</title>
 <jsp:include page="head.jsp"></jsp:include>
-<link rel="stylesheet" href="../js/kindeditor/themes/default/default.css" />
-	<link rel="stylesheet" href="../js/kindeditor/plugins/code/prettify.css" />
-	<script charset="utf-8" src="../js/kindeditor/kindeditor-all.js"></script>
-	<script charset="utf-8" src="../js/kindeditor/lang/zh-CN.js"></script>
-	<script charset="utf-8" src="../js/kindeditor/plugins/code/prettify.js"></script>
+<link rel="stylesheet" href="/js/kindeditor/themes/default/default.css" />
+	<link rel="stylesheet" href="/js/kindeditor/plugins/code/prettify.css" />
+	<script charset="utf-8" src="/js/kindeditor/kindeditor-all.js"></script>
+	<script charset="utf-8" src="/js/kindeditor/lang/zh-CN.js"></script>
+	<script charset="utf-8" src="/js/kindeditor/plugins/code/prettify.js"></script>
 	<script>
 		KindEditor.ready(function(K) {
 			var editor1 = K.create('textarea[name="content1"]', {
-				cssPath : '../js/kindeditor/plugins/code/prettify.css',
-				uploadJson : '../js/kindeditor/jsp/upload_json.jsp',
-				fileManagerJson : '../js/kindeditor/jsp/file_manager_json.jsp',
+				cssPath : '/js/kindeditor/plugins/code/prettify.css',
+				uploadJson : '/file/upload_json',
+				fileManagerJson : '/js/kindeditor/jsp/file_manager_json.jsp',
 				allowFileManager : true,
 				afterCreate : function() {
 					var self = this;
@@ -38,12 +38,7 @@
 			});
 			prettyPrint();
 		});
-		/*
-		KindEditor.ready(function (K) {
-            window.editor = K.create('#AContent', {
-                afterBlur: function () { this.sync(); }
-            });
-        });*/
+
 	</script>
 
 </head>
@@ -69,12 +64,6 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h3 class="panel-title">修改我的文章</h3>
-						<c:if test="${msg!=null }">
-							<div class="alert alert-info">
-								<button type="button" class="close" data-dismiss="alert">×</button>
-								<strong>提示!</strong> ${msg }.
-							</div>
-						</c:if>
 						<form>
 							<div class="panel panel-default">
 								<div class="panel-body">
@@ -91,24 +80,58 @@
 								<input type="hidden" name="id" id="Aid" value="${Article.id }">
 
 							</div>
-							<div id="Writing"></div><br>
+							<div id="msg"> </div>
 							<button class="btn btn-large btn-info" type="button" onclick="UpdateArticle()">保存修改</button>
-
 						</form>
-
 					</div>
-
 				</div>
-				
-
 			</div>
 			<div class="span2">
-				<c:import url="/view/left.do"></c:import>
+				<c:import url="/view/left"></c:import>
 			</div>
 			<div class="span1"></div>
 
 		</div>
 	</div>
 	<jsp:include page="footer.jsp"></jsp:include>
+<script>
+
+function go(url){ 
+	location.href = url;
+}
+
+function getmsg(mes){
+	return "<div class='alert alert-info'><button type=\"button\" class=\"close\" data-dismiss=\"alert\">×</button><strong>提示!</strong> " + mes +"</div>";
+}
+
+function UpdateArticle(){
+	SyncEditor();
+	var title = 	$("#title").val();
+	var gk = 		GetRadioValue("gk");
+	var MyArticle = $("#MyArticle").val();
+	var Aid = 		$("#Aid").val();
+	if(title.length == 0 || gk.length == 0 || MyArticle.length ==0 || Aid.length == 0){
+		$("#msg").html(getmsg("提示：不能有为空项。"));
+		return ;
+	}
+	$.post("/article/update",
+			{
+		title:title,
+		gk:gk,
+		MyArticle:MyArticle,
+		id:Aid
+			},function(data,status){
+				$("#msg").html(getmsg("正在保存中..."));
+				if(status == "success"){
+					if(data.indexOf("ok")!=-1) {
+						$("#msg").html(getmsg("修改成功，3s后跳转"));
+						setTimeout(go("/article/my"), 3000);
+					}
+					else $("#msg").html(getmsg("修改失败。" + data.substring(6)));
+				}
+			});
+}
+
+</script>
 </body>
 </html>

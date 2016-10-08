@@ -1,6 +1,7 @@
 package cn.zcyoung.home.pojo;
 
-import cn.zcyoung.home.util.Page;
+import cn.zcyoung.home.utils.Page;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
