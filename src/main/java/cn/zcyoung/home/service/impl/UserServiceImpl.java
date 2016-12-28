@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public boolean AddUser(User user) {
 		try {
+			
 			return userMapper.insert(user) > 0;
 		} catch (Exception e) {
 			e.printStackTrace();

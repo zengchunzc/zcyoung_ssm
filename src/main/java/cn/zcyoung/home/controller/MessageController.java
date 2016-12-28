@@ -17,6 +17,7 @@ import cn.zcyoung.home.service.MessageService;
 import cn.zcyoung.home.service.PageService;
 import cn.zcyoung.home.service.UserService;
 import cn.zcyoung.home.utils.DPage;
+import cn.zcyoung.home.utils.HtmlUtils;
 import cn.zcyoung.home.utils.PjaxUtils;
 import cn.zcyoung.home.web.auth.AuthPassport;
 
@@ -62,7 +63,7 @@ public class MessageController {
 	@RequestMapping(value = "/send", produces = "text/html;charset=UTF-8")
 	public String sendmessage(HttpServletRequest request, Integer id, String data){
 		User user = (User) request.getSession().getAttribute("User");
-		if(messageService.SendMessage(user.getId(), id, data, "")) return "ok";
+		if(messageService.SendMessage(user.getId(), id, HtmlUtils.delHTMLTag(data,2000), "")) return "ok";
 		return "error";
 	}
 	

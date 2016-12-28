@@ -47,7 +47,7 @@
 $(function(){
     $('#login').click(function(){
         $.pjax({
-            url: '/view/login.do',
+            url: '/view/login',
             container: '#pjax-container',
             timeout: 10000
         });

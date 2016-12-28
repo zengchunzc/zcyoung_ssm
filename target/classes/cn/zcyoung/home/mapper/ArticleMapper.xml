@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="body_pre" property="bodyPre" jdbcType="VARCHAR" />
     <result column="w_time" property="wTime" jdbcType="TIMESTAMP" />
     <result column="u_time" property="uTime" jdbcType="TIMESTAMP" />
     <result column="state" property="state" jdbcType="INTEGER" />
@@ -73,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, title, w_time, u_time, state, readpower, click
+    id, user_id, title, body_pre, w_time, u_time, state, readpower, click
   </sql>
   <sql id="Blob_Column_List" >
     body
@@ -131,13 +132,13 @@
   </delete>
   <insert id="insert" parameterType="cn.zcyoung.home.pojo.Article" >
     insert into article (id, user_id, title, 
-      w_time, u_time, state, 
-      readpower, click, body
-      )
+      body_pre, w_time, u_time, 
+      state, readpower, click, 
+      body)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
-      #{wTime,jdbcType=TIMESTAMP}, #{uTime,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}, 
-      #{readpower,jdbcType=INTEGER}, #{click,jdbcType=INTEGER}, #{body,jdbcType=LONGVARCHAR}
-      )
+      #{bodyPre,jdbcType=VARCHAR}, #{wTime,jdbcType=TIMESTAMP}, #{uTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=INTEGER}, #{readpower,jdbcType=INTEGER}, #{click,jdbcType=INTEGER}, 
+      #{body,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.zcyoung.home.pojo.Article" >
     insert into article
@@ -150,6 +151,9 @@
       </if>
       <if test="title != null" >
         title,
+      </if>
+      <if test="bodyPre != null" >
+        body_pre,
       </if>
       <if test="wTime != null" >
         w_time,
@@ -179,6 +183,9 @@
       </if>
       <if test="title != null" >
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="bodyPre != null" >
+        #{bodyPre,jdbcType=VARCHAR},
       </if>
       <if test="wTime != null" >
         #{wTime,jdbcType=TIMESTAMP},
@@ -218,6 +225,9 @@
       <if test="record.title != null" >
         title = #{record.title,jdbcType=VARCHAR},
       </if>
+      <if test="record.bodyPre != null" >
+        body_pre = #{record.bodyPre,jdbcType=VARCHAR},
+      </if>
       <if test="record.wTime != null" >
         w_time = #{record.wTime,jdbcType=TIMESTAMP},
       </if>
@@ -246,6 +256,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
+      body_pre = #{record.bodyPre,jdbcType=VARCHAR},
       w_time = #{record.wTime,jdbcType=TIMESTAMP},
       u_time = #{record.uTime,jdbcType=TIMESTAMP},
       state = #{record.state,jdbcType=INTEGER},
@@ -261,6 +272,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       title = #{record.title,jdbcType=VARCHAR},
+      body_pre = #{record.bodyPre,jdbcType=VARCHAR},
       w_time = #{record.wTime,jdbcType=TIMESTAMP},
       u_time = #{record.uTime,jdbcType=TIMESTAMP},
       state = #{record.state,jdbcType=INTEGER},
@@ -278,6 +290,9 @@
       </if>
       <if test="title != null" >
         title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="bodyPre != null" >
+        body_pre = #{bodyPre,jdbcType=VARCHAR},
       </if>
       <if test="wTime != null" >
         w_time = #{wTime,jdbcType=TIMESTAMP},
@@ -304,6 +319,7 @@
     update article
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
+      body_pre = #{bodyPre,jdbcType=VARCHAR},
       w_time = #{wTime,jdbcType=TIMESTAMP},
       u_time = #{uTime,jdbcType=TIMESTAMP},
       state = #{state,jdbcType=INTEGER},
@@ -316,6 +332,7 @@
     update article
     set user_id = #{userId,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
+      body_pre = #{bodyPre,jdbcType=VARCHAR},
       w_time = #{wTime,jdbcType=TIMESTAMP},
       u_time = #{uTime,jdbcType=TIMESTAMP},
       state = #{state,jdbcType=INTEGER},

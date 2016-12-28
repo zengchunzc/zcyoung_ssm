@@ -13,6 +13,7 @@ public interface NewsService {
 	//获取全部
 	public List<News> GetListNews();
 	public List<News> GetListNews(int PageIndex, int PageSize);
+	public List<News> GetListNews(int PageIndex, int PageSize, boolean ClickIncreace);
 	public List<News> GetListNews(int PageIndex, int PageSize, String key);
 	//删除
 	public boolean DeleteNews(int id);
@@ -23,4 +24,5 @@ public interface NewsService {
 	//总数
 	public int GetNewsCount();
 	public int GetNewsCount(String key);
+	public int GetNotNullBodyCount();
 }

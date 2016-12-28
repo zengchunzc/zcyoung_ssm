@@ -35,9 +35,11 @@ import cn.zcyoung.home.service.MessageService;
 import cn.zcyoung.home.service.PageService;
 import cn.zcyoung.home.service.UfileService;
 import cn.zcyoung.home.service.UserService;
+import cn.zcyoung.home.utils.HtmlUtils;
 import cn.zcyoung.home.utils.IPUtil;
 import cn.zcyoung.home.utils.MailUtils;
 import cn.zcyoung.home.utils.PjaxUtils;
+import cn.zcyoung.home.utils.mail.SimpleMailSender;
 import cn.zcyoung.home.web.auth.AuthPassport;
 @Controller
 @RequestMapping("/user")
@@ -233,7 +235,11 @@ public class UserController {
 		user.setRole("user");
 		user.setEmailYz(0);
 		user.setFriendList("1;");
+		user.setPic("/upload/nopic.jpg");
 		user.setrTime(new Date());
+		user.setUsername(HtmlUtils.delHTMLTag(user.getUsername()));
+		user.setNickname(HtmlUtils.delHTMLTag(user.getNickname()));
+		user.setSignature(HtmlUtils.delHTMLTag(user.getSignature()));
 		if(userService.AddUser(user)){
 			user = userService.GetUserByUsername(user.getUsername());
 			mailUtils.SendMailCode(user);
@@ -288,8 +294,8 @@ public class UserController {
 
 		User user=(User) session.getAttribute("User");
 		user = userService.GetUserById(user.getId());
-		user.setNickname(nickname);
-		user.setSignature(signature);
+		user.setNickname(HtmlUtils.delHTMLTag(nickname));
+		user.setSignature(HtmlUtils.delHTMLTag(signature));
 
 		MultipartHttpServletRequest multipartrequest = (MultipartHttpServletRequest) request;
 		CommonsMultipartFile obj = (CommonsMultipartFile) multipartrequest.getFile("pic");
@@ -348,10 +354,22 @@ public class UserController {
 			}
 		}
 		model.addAttribute("msg", "修改失败,文件大小50m以内，且只能为图片。");
-		
 		return PjaxUtils.get(request, "modify");
-
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/AjaxSendMailYz", method=RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public String AjaxSendMailYz(HttpServletRequest request){
+		User user = (User) request.getSession().getAttribute("User");
+		if(user != null && user.getEmailYz() != 1){
+			user.setEmailYz(1);
+			userService.UpdateUser(user);
+			SimpleMailSender.SendMail(user.getEmail(),"邮件系统修复中...已默认为您认证邮箱。", "来自zcyoung");
+			return "ok";
+		}
+		return "error";
+	}
+	
 	
 	
 }

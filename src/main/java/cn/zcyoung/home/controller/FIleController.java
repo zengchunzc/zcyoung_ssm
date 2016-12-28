@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import com.alibaba.fastjson.JSONObject;
 
 import cn.zcyoung.home.pojo.Ufile;
 import cn.zcyoung.home.pojo.User;
@@ -188,7 +189,6 @@ public class FIleController {
 		return "uploadfile";
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	@AuthPassport(isuser = true)
 	@ResponseBody
 	@RequestMapping(value="/upload_json",  produces = "text/html;charset=UTF-8")
@@ -317,7 +317,6 @@ public class FIleController {
 		return getError("未知错误");
 	}
 
-	@SuppressWarnings("unchecked")
 	private String getError(String message) {
 		JSONObject obj = new JSONObject();
 		obj.put("error", 1);

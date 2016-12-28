@@ -9,6 +9,8 @@ public class Article {
 
     private String title;
 
+    private String bodyPre;
+
     private Date wTime;
 
     private Date uTime;
@@ -43,6 +45,14 @@ public class Article {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+
+    public String getBodyPre() {
+        return bodyPre;
+    }
+
+    public void setBodyPre(String bodyPre) {
+        this.bodyPre = bodyPre == null ? null : bodyPre.trim();
     }
 
     public Date getwTime() {

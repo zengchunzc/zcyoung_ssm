@@ -77,3 +77,12 @@ from { -webkit-transform:rotate(0deg); } to { -webkit-transform:rotate(360deg); 
     -webkit-transform: scale(1.0);
   }
 }
+
+.topic_img {
+float: right;
+padding-left: 5px;
+padding-right: 10px;
+max-height: 80px;
+width:auto;
+width:expression(this.height > 80 ? "80px" : this.width);
+}

@@ -11,6 +11,7 @@
     <result column="savetime" property="savetime" jdbcType="TIMESTAMP" />
     <result column="source" property="source" jdbcType="VARCHAR" />
     <result column="click" property="click" jdbcType="INTEGER" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="cn.zcyoung.home.pojo.News" extends="BaseResultMap" >
     <result column="body" property="body" jdbcType="LONGVARCHAR" />
@@ -74,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, url, name, author, body_pre, sendtime, savetime, source, click
+    id, url, name, author, body_pre, sendtime, savetime, source, click, img
   </sql>
   <sql id="Blob_Column_List" >
     body
@@ -120,6 +121,14 @@
     from news
     where id = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="countByBodyNotNull"  resultType="java.lang.Integer" >
+    select count(*) from news where body!=''
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from news
     where id = #{id,jdbcType=INTEGER}
@@ -134,11 +143,11 @@
     insert into news (id, url, name, 
       author, body_pre, sendtime, 
       savetime, source, click, 
-      body)
+      img, body)
     values (#{id,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{author,jdbcType=VARCHAR}, #{bodyPre,jdbcType=VARCHAR}, #{sendtime,jdbcType=TIMESTAMP}, 
       #{savetime,jdbcType=TIMESTAMP}, #{source,jdbcType=VARCHAR}, #{click,jdbcType=INTEGER}, 
-      #{body,jdbcType=LONGVARCHAR})
+      #{img,jdbcType=VARCHAR}, #{body,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.zcyoung.home.pojo.News" >
     insert into news
@@ -169,6 +178,9 @@
       </if>
       <if test="click != null" >
         click,
+      </if>
+      <if test="img != null" >
+        img,
       </if>
       <if test="body != null" >
         body,
@@ -201,6 +213,9 @@
       </if>
       <if test="click != null" >
         #{click,jdbcType=INTEGER},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
       </if>
       <if test="body != null" >
         #{body,jdbcType=LONGVARCHAR},
@@ -243,6 +258,9 @@
       <if test="record.click != null" >
         click = #{record.click,jdbcType=INTEGER},
       </if>
+      <if test="record.img != null" >
+        img = #{record.img,jdbcType=VARCHAR},
+      </if>
       <if test="record.body != null" >
         body = #{record.body,jdbcType=LONGVARCHAR},
       </if>
@@ -262,6 +280,7 @@
       savetime = #{record.savetime,jdbcType=TIMESTAMP},
       source = #{record.source,jdbcType=VARCHAR},
       click = #{record.click,jdbcType=INTEGER},
+      img = #{record.img,jdbcType=VARCHAR},
       body = #{record.body,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -277,7 +296,8 @@
       sendtime = #{record.sendtime,jdbcType=TIMESTAMP},
       savetime = #{record.savetime,jdbcType=TIMESTAMP},
       source = #{record.source,jdbcType=VARCHAR},
-      click = #{record.click,jdbcType=INTEGER}
+      click = #{record.click,jdbcType=INTEGER},
+      img = #{record.img,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -309,6 +329,9 @@
       <if test="click != null" >
         click = #{click,jdbcType=INTEGER},
       </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
       <if test="body != null" >
         body = #{body,jdbcType=LONGVARCHAR},
       </if>
@@ -325,6 +348,7 @@
       savetime = #{savetime,jdbcType=TIMESTAMP},
       source = #{source,jdbcType=VARCHAR},
       click = #{click,jdbcType=INTEGER},
+      img = #{img,jdbcType=VARCHAR},
       body = #{body,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -337,7 +361,8 @@
       sendtime = #{sendtime,jdbcType=TIMESTAMP},
       savetime = #{savetime,jdbcType=TIMESTAMP},
       source = #{source,jdbcType=VARCHAR},
-      click = #{click,jdbcType=INTEGER}
+      click = #{click,jdbcType=INTEGER},
+      img = #{img,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

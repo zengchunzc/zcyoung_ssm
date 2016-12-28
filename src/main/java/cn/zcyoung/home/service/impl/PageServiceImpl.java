@@ -1,10 +1,15 @@
 package cn.zcyoung.home.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
+import cn.zcyoung.home.pojo.Acmlog;
 import cn.zcyoung.home.pojo.Article;
 import cn.zcyoung.home.pojo.Friendurl;
 import cn.zcyoung.home.pojo.LoginHistory;
@@ -12,6 +17,7 @@ import cn.zcyoung.home.pojo.Message;
 import cn.zcyoung.home.pojo.News;
 import cn.zcyoung.home.pojo.Ufile;
 import cn.zcyoung.home.pojo.User;
+import cn.zcyoung.home.service.AcmService;
 import cn.zcyoung.home.service.ArticleService;
 import cn.zcyoung.home.service.FriendUrlService;
 import cn.zcyoung.home.service.LoginHistoryService;
@@ -21,6 +27,7 @@ import cn.zcyoung.home.service.PageService;
 import cn.zcyoung.home.service.UfileService;
 import cn.zcyoung.home.service.UserService;
 import cn.zcyoung.home.utils.DPage;
+import cn.zcyoung.home.utils.PAcm;
 
 @Component
 public class PageServiceImpl implements PageService{
@@ -38,6 +45,8 @@ public class PageServiceImpl implements PageService{
 	private LoginHistoryService loginHistoryService;
 	@Resource
 	private UfileService ufileService;
+	@Resource 
+	private AcmService acmService;
 	
 	@Override
 	public DPage<News> GetNewsPage(int PageIndex, int PageSize) {
@@ -193,6 +202,41 @@ public class PageServiceImpl implements PageService{
 		DPage<User> page = new DPage<User>();
 		if(!init(page, PageIndex, PageSize, userService.GetUserCount(key))) return null;
 		page.setDatas(userService.GetListUser(page.getPageIndex(), PageSize, key));
+		return page;
+	}
+
+	@Override
+	public DPage<PAcm> GetAcmPage() {
+		DPage<PAcm> page = new DPage<PAcm>();
+		List<PAcm> list = new ArrayList<PAcm>();
+		
+		List<User> listuser = userService.GetListUser();
+		for(User u : listuser){
+			if(u.getUsername().length() == 10 && u.getUsername().startsWith("1")){
+				PAcm acm = new PAcm();
+				acm.setUser(u);
+				acm.setYear(acmService.GetYearScore(u.getUsername()));
+				acm.setMonth(acmService.GetMonthScore(u.getUsername()));
+				//acm.setList(acmService.GetListAcmLog(u.getUsername(), false));
+				list.add(acm);
+			}
+		}
+		Collections.sort(list);
+		page.setDatas(list);
+		page.setPageIndex(1);
+		page.setTotalPages(1);
+		page.setPageSize(99999);
+		return page;
+	}
+
+	@Override
+	public DPage<Acmlog> GetAcmlogPage(String no) {
+		DPage<Acmlog> page = new DPage<Acmlog>();
+		List<Acmlog> list = acmService.GetListAcmLog(no, false);
+		page.setDatas(list);
+		page.setPageIndex(1);
+		page.setTotalPages(1);
+		page.setPageSize(99999);
 		return page;
 	}
 }

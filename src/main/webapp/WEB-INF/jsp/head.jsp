@@ -35,8 +35,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 //                  别人笑我忒疯癫，我笑自己命太贱；  
 //                  不见满街漂亮妹，哪个归得程序员？
 -->
-<!--  <script type="text/javascript" src="/js/jquery-3.1.0.min.js"></script>-->
-<script type="text/javascript" src="/js/js.js"></script>
+<script type="text/javascript" src="/js/js_min.js"></script>
 <script type="text/javascript" src="/js/json.js"></script>
 <script type="text/javascript" src="/js/jquery-2.0.0.min.js"></script>
 <script type="text/javascript" src="/js/jquery.pjax.js"></script>
@@ -52,5 +51,3 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico" media="screen" />
 
-
-  

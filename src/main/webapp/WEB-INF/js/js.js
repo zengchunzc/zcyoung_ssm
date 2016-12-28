@@ -10,7 +10,7 @@ function GetRadioValue(RadioName){
 
 function SendMailYz(){
 	$("#MailYz").html("(邮箱还未验证，会影响您的体验与安全。)[发送中。。]");
-	$.post("/user/AjaxSendMailYz.do",{},
+	$.post("/user/AjaxSendMailYz",{},
 			function(data,status){
 				if(status == "success"){
 					if(data.indexOf("ok") != -1){

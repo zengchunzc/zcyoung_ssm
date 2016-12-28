@@ -21,6 +21,8 @@ public class News {
 
     private Integer click;
 
+    private String img;
+
     private String body;
 
     public Integer getId() {
@@ -93,6 +95,14 @@ public class News {
 
     public void setClick(Integer click) {
         this.click = click;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img == null ? null : img.trim();
     }
 
     public String getBody() {

@@ -1,10 +1,10 @@
 package cn.zcyoung.home.pojo;
 
-import cn.zcyoung.home.utils.Page;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cn.zcyoung.home.utils.Page;
 
 public class ArticleExample {
     protected String orderByClause;
@@ -304,6 +304,76 @@ public class ArticleExample {
 
         public Criteria andTitleNotBetween(String value1, String value2) {
             addCriterion("title not between", value1, value2, "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreIsNull() {
+            addCriterion("body_pre is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreIsNotNull() {
+            addCriterion("body_pre is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreEqualTo(String value) {
+            addCriterion("body_pre =", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreNotEqualTo(String value) {
+            addCriterion("body_pre <>", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreGreaterThan(String value) {
+            addCriterion("body_pre >", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreGreaterThanOrEqualTo(String value) {
+            addCriterion("body_pre >=", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreLessThan(String value) {
+            addCriterion("body_pre <", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreLessThanOrEqualTo(String value) {
+            addCriterion("body_pre <=", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreLike(String value) {
+            addCriterion("body_pre like", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreNotLike(String value) {
+            addCriterion("body_pre not like", value, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreIn(List<String> values) {
+            addCriterion("body_pre in", values, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreNotIn(List<String> values) {
+            addCriterion("body_pre not in", values, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreBetween(String value1, String value2) {
+            addCriterion("body_pre between", value1, value2, "bodyPre");
+            return (Criteria) this;
+        }
+
+        public Criteria andBodyPreNotBetween(String value1, String value2) {
+            addCriterion("body_pre not between", value1, value2, "bodyPre");
             return (Criteria) this;
         }
 

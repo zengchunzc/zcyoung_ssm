@@ -1,5 +1,6 @@
 package cn.zcyoung.home.service;
 
+import cn.zcyoung.home.pojo.Acmlog;
 import cn.zcyoung.home.pojo.Friendurl;
 import cn.zcyoung.home.pojo.LoginHistory;
 import cn.zcyoung.home.pojo.Message;
@@ -8,6 +9,7 @@ import cn.zcyoung.home.pojo.Article;
 import cn.zcyoung.home.pojo.Ufile;
 import cn.zcyoung.home.pojo.User;
 import cn.zcyoung.home.utils.DPage;
+import cn.zcyoung.home.utils.PAcm;
 
 
 public interface PageService {
@@ -36,4 +38,7 @@ public interface PageService {
 	//用户
 	public DPage<User> GetUserPage(int PageIndex, int PageSize);
 	public DPage<User> GetUserPage(int PageIndex, int PageSize, String key);
+	//acm
+	public DPage<PAcm> GetAcmPage();
+	public DPage<Acmlog> GetAcmlogPage(String no);
 }

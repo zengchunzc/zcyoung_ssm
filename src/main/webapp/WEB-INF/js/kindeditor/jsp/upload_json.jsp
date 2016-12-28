@@ -1,3 +1,4 @@
+<%@page import="com.alibaba.fastjson.JSONObject"%>
 <%@page import="cn.zcyoung.home.service.impl.UfileServiceImpl"%>
 <%@page import="cn.zcyoung.home.pojo.Ufile"%>
 <%@page import="cn.zcyoung.home.pojo.User"%>
@@ -8,7 +9,7 @@
 <%@ page import="org.apache.commons.fileupload.*"%>
 <%@ page import="org.apache.commons.fileupload.disk.*"%>
 <%@ page import="org.apache.commons.fileupload.servlet.*"%>
-<%@ page import="org.json.simple.*"%>
+
 <%
 	/**
 	 * KindEditor JSP

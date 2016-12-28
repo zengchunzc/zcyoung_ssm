@@ -1,8 +1,12 @@
 package cn.zcyoung.home.utils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,7 +69,7 @@ public class NewsUtils{
 			news.setSource(sourse);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return news;
 	}
@@ -96,7 +100,6 @@ public class NewsUtils{
 			br.close();
 			is.close();
 			String regex = "(?<=<h2 class=\"news_entry\">)([\\s\\S]{200,2000})(?=<!--end: entry_footer -->)";
-
 			Pattern p = Pattern.compile(regex);
 
 			Matcher m = p.matcher(body);
@@ -160,6 +163,7 @@ public class NewsUtils{
 		String url = "";
 		String author = "";
 		String sendtime = "";
+		String img = "";
 
 		Pattern pname = Pattern.compile("(?<=target=\"_blank\">)([\\s\\S]{3,50})(?=</a>)");
 		Matcher mname = pname.matcher(body);
@@ -195,11 +199,18 @@ public class NewsUtils{
 			author = mzuozhe.group();
 		}
 		
+		Pattern pimg = Pattern.compile("(?<=src=\"//)([\\s\\S]{1,200}(.png|.jpg|.gif))");
+		Matcher mcimg = pimg.matcher(body);
+		if(mcimg.find()){
+			img = mcimg.group();
+		}
+		
 		News news = new News();
 		news.setAuthor(author.trim());
 		news.setBodyPre(body_pre.trim());
 		news.setUrl(url.trim());
 		news.setName(name.trim());
+		news.setImg(img);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");                
 		try {
 			Date date = sdf.parse(sendtime);
@@ -209,6 +220,45 @@ public class NewsUtils{
 		} 
 		return news;
 	}
-
-
+	
+	public static boolean download(String urlStr, String fileName,String savePath){ 
+		try {
+			URL url = new URL(urlStr);    
+	        HttpURLConnection conn = (HttpURLConnection)url.openConnection();    
+	        conn.setConnectTimeout(3*1000);  
+	        //防止屏蔽程序抓取而返回403错误  
+	        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");  
+	        //得到输入流  
+	        InputStream inputStream = conn.getInputStream();    
+	        //获取自己数组  
+	        byte[] buffer = new byte[1024];    
+	        int len = 0;    
+	        ByteArrayOutputStream bos = new ByteArrayOutputStream();    
+	        while((len = inputStream.read(buffer)) != -1) {    
+	            bos.write(buffer, 0, len);    
+	        }    
+	        bos.close();
+	        byte[] getData = bos.toByteArray();
+	  
+	        //文件保存位置  
+	        File saveDir = new File(savePath);  
+	        if(!saveDir.exists()){  
+	            saveDir.mkdir();  
+	        }  
+	        File file = new File(saveDir, fileName);
+	        FileOutputStream fos = new FileOutputStream(file);       
+	        fos.write(getData);   
+	        if(fos!=null){  
+	            fos.close();    
+	        }  
+	        if(inputStream!=null){  
+	            inputStream.close();  
+	        }  
+	        return true;
+		} catch (Exception e) {
+		}
+		return false;
+        
+    }  
+  
 }

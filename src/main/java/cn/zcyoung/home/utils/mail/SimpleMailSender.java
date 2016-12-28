@@ -295,7 +295,7 @@ public class SimpleMailSender {
 			return SimpleMailSender.sendHtmlMail(mailInfo);//发送文体格式  
 			//System.out.println(SimpleMailSender.sendMail(mailInfo));
 		}catch(Exception e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return false;
 	}

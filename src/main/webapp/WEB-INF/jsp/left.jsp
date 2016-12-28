@@ -15,10 +15,7 @@
 		<!--<div class="list-group-item">
 			<span class="badge">58</span>更多文章
 		</div>-->
-		<a data-pjax href="javascript:void(0);" class="list-group-item active">工具区</a>
-		<div class="list-group-item" >
-		<a data-pjax href="/2weima" style="text-decoration : none; color:black;">二维码在线生成</a>
-		</div>
+
 		<a data-pjax href="/view/friendurl" class="list-group-item active">友链中心</a>
 		
 		<c:forEach items="${FUPage.datas }" var="p">
@@ -26,6 +23,8 @@
 				<a href="/redirect/friendurl/${p.id }" style="text-decoration : none; color:black;" target="_blank">${p.name }</a>
 			</div>
 		</c:forEach>
+		
+		
 		
 	</div>
 	<div class="panel-footer" style="text-align:center;">

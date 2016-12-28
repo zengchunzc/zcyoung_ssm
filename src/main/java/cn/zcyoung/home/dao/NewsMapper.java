@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface NewsMapper {
     int countByExample(NewsExample example);
+    
+    int countByBodyNotNull();
 
     int deleteByExample(NewsExample example);
 
@@ -33,4 +35,5 @@ public interface NewsMapper {
     int updateByPrimaryKeyWithBLOBs(News record);
 
     int updateByPrimaryKey(News record);
+    
 }

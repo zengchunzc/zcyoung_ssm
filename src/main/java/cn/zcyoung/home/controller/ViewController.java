@@ -1,6 +1,5 @@
 package cn.zcyoung.home.controller;
 
-import java.io.UnsupportedEncodingException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -57,13 +56,9 @@ public class ViewController {
 		request.setAttribute("Page", pageService.GetFriendUrlPage(FriendUrlService.By_TIME, 1, 10, false));
 		return PjaxUtils.get(request, "friendurl");
 	}
+	@AuthPassport(isuser = true)
 	@RequestMapping("/space/{username}")
 	public String space(@PathVariable String username, HttpServletRequest request){
-		try {
-			username = new String(username.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		User user = userService.GetUserByUsername(username);
 		if(user == null){
 			request.setAttribute("GoForward", new GoForward());

@@ -45,7 +45,7 @@
 $(function(){
     $('#regist').click(function(){
         $.pjax({
-            url: '/view/regist.do',
+            url: '/view/regist',
             container: '#pjax-container',
             timeout: 10000
         });

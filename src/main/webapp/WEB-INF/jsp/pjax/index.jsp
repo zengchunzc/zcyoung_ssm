@@ -16,8 +16,12 @@
 			<h4>
 				<a data-pjax href="/news/${p.id }">${p.name }</a>
 			</h4>
+			<img src="${p.img }" class="topic_img"/>
 			<p>${p.bodyPre }</p>
+			<div class="biaoqian">
 			<p align="right">标签：${p.author }&nbsp;&nbsp;发布时间： <fmt:formatDate value="${p.sendtime }" type="both" /></p>
+			</div>
+			
 		</div>
 	</c:forEach>
 

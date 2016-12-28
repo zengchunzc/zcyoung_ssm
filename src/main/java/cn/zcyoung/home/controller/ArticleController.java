@@ -1,6 +1,5 @@
 package cn.zcyoung.home.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import javax.annotation.Resource;
@@ -18,6 +17,7 @@ import cn.zcyoung.home.service.ArticleService;
 import cn.zcyoung.home.service.PageService;
 import cn.zcyoung.home.service.UserService;
 import cn.zcyoung.home.utils.GoForward;
+import cn.zcyoung.home.utils.HtmlUtils;
 import cn.zcyoung.home.utils.PjaxUtils;
 import cn.zcyoung.home.web.auth.AuthPassport;
 
@@ -57,9 +57,11 @@ public class ArticleController {
 				return "goforward";
 			}
 		}
+		user = userService.GetUserById(article.getUserId());
 		article.setClick(article.getClick() + 1);
 		articleService.UpdateArticle(article);
 		request.setAttribute("Article", article); 
+		request.setAttribute("author", user);
 		return PjaxUtils.get(request, "article");
 	}
 	@RequestMapping("/list/{id}")
@@ -69,11 +71,6 @@ public class ArticleController {
 	}
 	@RequestMapping("/list/{id}/{key}")
 	public String articlel(@PathVariable Integer id,@PathVariable String key,  HttpServletRequest request){
-		try {
-			key = new String(key.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		request.setAttribute("Key", key);
 		request.setAttribute("Page", pageService.GetArticlePage(ArticleService.By_TIME, id, 10, false, key));
 		return PjaxUtils.get(request, "articlelist");
@@ -82,11 +79,6 @@ public class ArticleController {
 	@AuthPassport(isuser = true)
 	@RequestMapping("/friend/{username}")
 	public String fu(HttpServletRequest request, @PathVariable String username){
-		try {
-			username = new String(username.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		User user = userService.GetUserByUsername(username);
 		if(user == null) {
 			request.setAttribute("GoForward", new GoForward("错误，3s..", "3000", "/article/my"));
@@ -106,11 +98,6 @@ public class ArticleController {
 	@AuthPassport(isuser = true)
 	@RequestMapping("/friend/{username}/{page}")
 	public String fu(HttpServletRequest request, @PathVariable String username, @PathVariable Integer page){
-		try {
-			username = new String(username.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		User user = userService.GetUserByUsername(username);
 		if(user == null) {
 			request.setAttribute("GoForward", new GoForward("错误，3s..", "3000", "/article/my"));
@@ -124,12 +111,6 @@ public class ArticleController {
 	@AuthPassport(isuser = true)
 	@RequestMapping("/friend/{username}/{page}/{key}")
 	public String fu(HttpServletRequest request, @PathVariable String username, @PathVariable Integer page, @PathVariable String key){
-		try {
-			username = new String(username.getBytes("iso-8859-1"), "utf-8");
-			key = new String(key.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		User user = userService.GetUserByUsername(username);
 		if(user == null) {
 			request.setAttribute("GoForward", new GoForward("错误，3s..", "3000", "/article/my"));
@@ -165,11 +146,6 @@ public class ArticleController {
 	@RequestMapping("/my/{page}/{key}")
 	public String my(@PathVariable Integer page, @PathVariable String key, HttpServletRequest request){
 		User user = (User) request.getSession().getAttribute("User");
-		try {
-			key = new String(key.getBytes("iso-8859-1"), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
 		request.setAttribute("Key", key);
 		request.setAttribute("Page", pageService.GetArticlePage(ArticleService.By_TIME, page, 10, true, user.getId(), key));
 		return PjaxUtils.get(request, "myarticle");
@@ -221,7 +197,7 @@ public class ArticleController {
 			return "error:不能有为空项。";
 		}
 		Article article=new Article();
-		article.setTitle(title);
+		article.setTitle(HtmlUtils.delHTMLTag(title, 200));
 		article.setReadpower(gk.equals("是")?2:1);
 		article.setBody(MyArticle);
 		article.setUserId(user.getId());
@@ -229,6 +205,7 @@ public class ArticleController {
 		article.setuTime(new Date());
 		article.setState(1);
 		article.setClick(0);
+		article.setBodyPre(HtmlUtils.delHTMLTag(MyArticle, 200));
 		if(articleService.AddArticle(article)){
 			return "ok";
 		}
@@ -246,7 +223,6 @@ public class ArticleController {
 			if(articleService.DeleteArticle(id, false)){
 				request.setAttribute("msg", "删除成功。");
 			}else request.setAttribute("msg", "删除失败。");
-				
 		}
 		request.setAttribute("Page", pageService.GetArticlePage(ArticleService.By_TIME, 1, 10, true, user.getId()));
 		return PjaxUtils.get(request, "myarticle");
